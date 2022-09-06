@@ -1,0 +1,31 @@
+{
+  "name": "idna",
+  "version": "1.0.0",
+  "description": "A IDNA based module for validation on Multilinguage Domain Names with Unicode Domain Mapping",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Abhijeet-kadance/IDNA.git"
+  },
+  "keywords": [
+    "IDNA"
+  ],
+  "author": "ABhijeet Thorat",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Abhijeet-kadance/IDNA/issues"
+  },
+  "homepage": "https://github.com/Abhijeet-kadance/IDNA#readme",
+  "dependencies": {
+    "@sideway/address": "^5.0.0",
+    "body-parser": "^1.20.0",
+    "express": "^4.18.1",
+    "express-validator": "^6.14.2",
+    "idna-uts46": "^1.1.0",
+    "nodemon": "^2.0.19"
+  }
+}
