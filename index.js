@@ -13,6 +13,8 @@ app.get('/',(req,res)=>{
     res.send("Test Code")
 })
 
+const domains = ["IN","COM","","",""];
+
 // app.get('/result',(req,res)=>{
 //     res.render('result');
 // });
@@ -51,13 +53,18 @@ app.post("/test",(req,res)=>{
     // console.log("The Domain is IDNA Based : " , unicodeStatus)
     if(unicodeStatus == true){
         console.log("Do UTS stuff")
+        let punyAsciiValue = uts46.toAscii(domainpart,{useStd3ASCII: true});
+        let punyUniCodeValue = uts46.toUnicode(punyAsciiValue);
+        if(domainpart === punyUniCodeValue){
+            console.log("Domain Part of The Domain" + " " + domainpart + " is Valid")
+        }else{
+            console.log("Domain Part is not valid")
+        }
     }else{
         console.log("regex stuff")
         const EmailRegEx = new RegExp('^[a-zA-Z0-9.!#$%&’*+=?^`{|}~-]+@([a-zA-Z0-9-]+[.]){1,2}[a-zA-Z]{2,10}$');
         console.log(EmailRegEx.test(email))
-        
     }
-
 })
 
 app.post("/data",(req,res)=>{
