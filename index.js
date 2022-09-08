@@ -1,9 +1,13 @@
 const express = require("express")
 const app = express();
 const bodyParser = require('body-parser');
+var cors = require('cors');
 var uts46 = require("idna-uts46");
 // const { body, validationResult } = require('express-validator');
+
+app.use(cors());
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/',(req,res)=>{
     res.send("Test Code")
@@ -22,14 +26,17 @@ app.get("/uts46",(req,res)=>{
 })
 
 app.post("/data",(req,res)=>{
-    var domain = req.body.domain;
+    console.log("tets", req.body)
+
+    console.log(req.body.username)
+    var domain = req.body.username;
     var f={domain:domain};
     
     var localpart = f.domain.split('@')[0]
     var domainpart = f.domain.split('@')[1]
 
-    // console.log(localpart)
-    // console.log(domainpart)
+    console.log(localpart)
+    console.log(domainpart)
 
     try{
         // console.log(uts46.toAscii(domainpart,{useStd3ASCII: true}))
@@ -38,11 +45,12 @@ app.post("/data",(req,res)=>{
         // console.log(uts46.toUnicode(domainpart))
         let punyUniCodeValue = uts46.toUnicode(punyAsciiValue)
         // console.log("Domain Value : ",punyUniCodeValue)
-        const localPartRegEx = new RegExp('^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$');
+        // const localPartRegEx = new RegExp('^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$');
+        //const emailRegex =/^[a-zA-Z0-9.!#$%&’*+/=?^`{|}~-]/;
         //const localPartRegEx = new RegExp('^[a-zA-Z0-9.!#$%&’*+=?^`{|}~-]+@([a-zA-Z0-9-]+[.]){1,2}[a-zA-Z]{2,10}$');
         //const localPartRegEx = `^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$`;
-        let name = 'abhijeett@cdac.in';
-        console.log(localPartRegEx.test(name))
+        //let name = 'abhijeett@cdac.in';
+        //console.log(emailRegex.test(localpart))
 
         if(domainpart === punyUniCodeValue){
             console.log("Domain Part of The Domain" + " " + domainpart + " is Valid")

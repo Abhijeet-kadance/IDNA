@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IDNA</title>
+    <script
+      src="https://code.jquery.com/jquery-3.6.1.min.js"
+      integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ="
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      $(function () {
+        $("form").on("submit", function (e) {
+          e.preventDefault();
+         
+
+          $.ajax({
+            type: "post",
+            url: "http://127.0.0.1:3000/data",
+            data: $("form").serialize(),
+            success: function () {
+              alert("form was submitted");
+            },
+          });
+        });
+      });
+      
+        // .done(function () {
+        //   console.log("OK");
+        // })
+        // .fail(function (errorThrown) {
+        //   console.log(errorThrown);
+        // });
+
+    </script>
+  </head>
+  <body>
+    <form >
+      <!-- Creating the parameter Username as type= "text"-->
+      <label>Username: </label>
+      <input type="text" placeholder="Name" name="username" /><br /><br />
+      <!-- Creating the submit button -->
+      <button>Submit</button>
+    </form>
+  </body>
+</html>
