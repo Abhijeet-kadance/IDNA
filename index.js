@@ -17,12 +17,47 @@ app.get('/',(req,res)=>{
 //     res.render('result');
 // });
 
+function checkDomainUnicodeStandard(str) {
+    console.log("inside the Function")
+    for (var i = 0, n = str.length; i < n; i++) {
+        if (str.charCodeAt( i ) > 255) { 
+            console.log("True")
+            return true; 
+        }
+    }
+    console.log("false")
+    return false;
+}
 
 app.get("/uts46",(req,res)=>{
     console.log(uts46.toAscii('cdac.in'))
     console.log(uts46.toAscii('सीडैक.रत',{useStd3ASCII: true}))
     console.log(uts46.toUnicode('सीडैक.$रत'))
     console.log(uts46.toUnicode('xn--11bx2e6a3b.xn--h2brj9c'))
+})
+
+app.post("/test",(req,res)=>{
+    const email = req.body.email;
+      
+    var localpart = email.split('@')[0]
+    var domainpart = email.split('@')[1]
+
+    let punyAsciiValue = uts46.toAscii(domainpart,{useStd3ASCII: true});
+    let punyUniCodeValue = uts46.toUnicode(punyAsciiValue)
+    console.log(punyAsciiValue)
+    console.log(punyUniCodeValue)
+
+    let unicodeStatus = checkDomainUnicodeStandard(domainpart)
+    // console.log("The Domain is IDNA Based : " , unicodeStatus)
+    if(unicodeStatus == true){
+        console.log("Do UTS stuff")
+    }else{
+        console.log("regex stuff")
+        const EmailRegEx = new RegExp('^[a-zA-Z0-9.!#$%&’*+=?^`{|}~-]+@([a-zA-Z0-9-]+[.]){1,2}[a-zA-Z]{2,10}$');
+        console.log(EmailRegEx.test(email))
+        
+    }
+
 })
 
 app.post("/data",(req,res)=>{
