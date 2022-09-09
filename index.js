@@ -18,7 +18,13 @@ const domains = ["IN","COM","","",""];
 // app.get('/result',(req,res)=>{
 //     res.render('result');
 // });
-
+function convertTextToArray(){
+    var fs = require("fs");
+    var text = fs.readFileSync("./docs/test.txt");
+    var textByLine = text.toString().split("\n")
+    // console.log(textByLine)
+    return textByLine;
+}
 function checkDomainUnicodeStandard(str) {
     console.log("inside the Function")
     for (var i = 0, n = str.length; i < n; i++) {
@@ -40,7 +46,8 @@ app.get("/uts46",(req,res)=>{
 
 app.post("/test",(req,res)=>{
     const email = req.body.email;
-      
+    const TLDList = convertTextToArray();
+    console.log(TLDList)
     var localpart = email.split('@')[0]
     var domainpart = email.split('@')[1]
 
