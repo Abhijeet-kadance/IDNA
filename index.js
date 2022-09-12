@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
+var lookup = require('dns-lookup');
 var cors = require("cors");
 var uts46 = require("idna-uts46");
 
@@ -52,9 +53,9 @@ app.post("/test", (req, res) => {
   const TLDList = convertTextToArray();
   console.log(TLDList);
 
-  if(email.split('@').length > 2){
-    console.log("Email ",email," not valid")
-    return 
+  if (email.split("@").length > 2) {
+    console.log("Email ", email, " not valid");
+    return;
   }
   var localpart = email.split("@")[0];
   var domainpart = email.split("@")[1];
@@ -66,32 +67,37 @@ app.post("/test", (req, res) => {
     if (checkUnicodeStandard(email)) {
       // true for unicode
       // validate for unicode
-      console.log("Do UTS stuff")
-      try{
-        let punyAsciiValue = uts46.toAscii(domainpart,{useStd3ASCII: true});
+      console.log("Do UTS stuff");
+      try {
+        let punyAsciiValue = uts46.toAscii(domainpart, { useStd3ASCII: true });
         let punyUniCodeValue = uts46.toUnicode(punyAsciiValue);
-        console.log(punyAsciiValue)
-        console.log(punyUniCodeValue)
+        console.log(punyAsciiValue);
+        console.log(punyUniCodeValue);
 
         // validate domain part
-
-
+        if(punyUniCodeValue == domainpart){
+            console.log("Domain Part is Verified...")
+        }else{
+            console.log("Domain part is not validated")
+        }
+       
         // validate local part
+        const localRegex = new RegExp('^\w+([.-]?\w+)*$');
+        console.log(localRegex.test(localpart))
 
-        
-      }catch(error){
-        console.log("Error", error)
-        console.log("domain invalidated ")
+      } catch (error) {
+        console.log("Error", error);
+        console.log("domain invalidated ");
       }
-
     } else {
       // false for english
       // validate email
       console.log("regex stuff for ENGLISH");
+      //"^[a-zA-Z0-9.!#$%&’*+=?^`{|}~-]+@([a-zA-Z0-9-]+[.]){1,2}[a-zA-Z]{2,10}$"
       const EmailRegEx = new RegExp(
-        "^[a-zA-Z0-9.!#$%&’*+=?^`{|}~-]+@([a-zA-Z0-9-]+[.]){1,2}[a-zA-Z]{2,10}$"
+        "^(?![^@\n]*([-.])\1)(?![^@\n]*([-.])(?:[^@\n]*\2){2})\w(?:[\w.-]*\w)?@(?:[a-zA-Z]+\.)+[a-zA-Z]+$",
       );
-      console.log("76 : ", EmailRegEx.test(email));
+      console.log("Email : ", EmailRegEx.test(email));
     }
   } else {
     // tld check failed
@@ -99,6 +105,26 @@ app.post("/test", (req, res) => {
   }
 });
 
+app.post('/checkdns', (req,res) => {
+    const data = req.body.domain;
+    const local = data.split('@')[0];
+    const domain = data.split('@')[1];
+    let punny = uts46.toAscii(domain)
+    console.log(data)
+    let completeDomain = local+"@"+punny;
+    console.log(completeDomain)
+
+
+    console.log(uts46.toAscii(domain, { useStd3ASCII: true }))
+    console.log()
+    lookup(completeDomain, (err, address, family)=> {
+        if(address != null){
+            console.log("DNS resolved at : " + address)
+        }else if(err){
+            console.log("DNS does not exists !!!")
+        }
+    });
+});
 app.listen(3000, () => {
   console.log("Server running on port 3000");
 });

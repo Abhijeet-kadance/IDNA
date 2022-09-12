@@ -1,9 +1,18 @@
 
 
-Steps 
+Steps :
 1- check TLD(top level domain)
 2- split local and domain part 
 3- check local and domain is valid
     a- Check domain/local is in ASCII or unicode
+        if: (localpart is ascii and domain part is unicode)
+            then : convert unicode to ASCII based Punycode 
+        if(localpart is ascii and domain part is ascii)
+            then : simple REGEX
+        if(localpart is unicode and domain part is unicode)
+            then : resolve complete address by Punnycode
+        if(localpart is unicode and domain part is ascii)
+            then : convert the localpart using ASCII based Punnycode
     b- check domain/local if IDNA compliant separatly
+
 4- check if both domain and local parts are valid
