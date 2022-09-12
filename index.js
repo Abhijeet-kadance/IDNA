@@ -71,13 +71,24 @@ app.post("/test", (req, res) => {
       try {
         let punyAsciiValue = uts46.toAscii(domainpart, { useStd3ASCII: true });
         let punyUniCodeValue = uts46.toUnicode(punyAsciiValue);
-        console.log(punyAsciiValue);
+        console.log("Test : " + punyAsciiValue);
         console.log(punyUniCodeValue);
 
+
+        //Regular Expression FOr no repeatative '.' character in email
+        //^(?!\.)(?!.*\.$)(?!.*?\.\.)[a-zA-Z0-9_.]+$
+        
+      
         // validate domain part
 
-        // Check whether each part of the domain is not longer than 63 characters, and allow internationalized domain names using the punycode notation:
-        const domainRegEx = new RegExp('\b((?=[a-z0-9-]{1,63}\.)(xn--)?[a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,63}\b')
+        // Check whether each part of the domain is not longer than 63 characters, 
+        // and allow internationalized domain names using the punycode notation:
+        // \b((xn--)?[a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,63}\b
+        // \b((?=[a-z0-9-]{1,63}\.)(xn--)?[a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,63}\b
+
+        const domainRegEx = new RegExp('^(?!\.)(?!.*\.$)(?!.*?\.\.)[a-zA-Z0-9_.]+$')
+        console.log("Testing Domain RegExpression: " + domainRegEx.test(punyUniCodeValue))
+
         if(punyUniCodeValue == domainpart){
             console.log("Domain Part is Verified...")
         }else{
@@ -108,7 +119,7 @@ app.post("/test", (req, res) => {
   }
 });
 
-app.post('/checkdns', (req,res) => {
+app.get('/checkdns', (req,res) => {
     const data = req.body.domain;
     const local = data.split('@')[0];
     const domain = data.split('@')[1];
@@ -117,10 +128,11 @@ app.post('/checkdns', (req,res) => {
     let completeDomain = local+"@"+punny;
     console.log(completeDomain)
 
-
+    
     console.log(uts46.toAscii(domain, { useStd3ASCII: true }))
     console.log()
-    lookup(completeDomain, (err, address, family)=> {
+    lookup('gmail.com', (err, address, family)=> {
+        
         if(address != null){
             console.log("DNS resolved at : " + address)
         }else if(err){
