@@ -73,7 +73,8 @@ app.post("/test", (req, res) => {
         let punyUniCodeValue = uts46.toUnicode(punyAsciiValue);
         console.log("Test : " + punyAsciiValue);
         console.log(punyUniCodeValue);
-
+        //RegExp for Punny Code Standard 
+        //\b((xn--)?[a-z0-9]+(-[a-z0-9]+)*\.)+\b((xn--)?[a-z0-9]*){2,63}\b
 
         //Regular Expression FOr no repeatative '.' character in email
         //^(?!\.)(?!.*\.$)(?!.*?\.\.)[a-zA-Z0-9_.]+$
