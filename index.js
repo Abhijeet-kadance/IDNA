@@ -75,6 +75,9 @@ app.post("/test", (req, res) => {
         console.log(punyUniCodeValue);
 
         // validate domain part
+
+        // Check whether each part of the domain is not longer than 63 characters, and allow internationalized domain names using the punycode notation:
+        const domainRegEx = new RegExp('\b((?=[a-z0-9-]{1,63}\.)(xn--)?[a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,63}\b')
         if(punyUniCodeValue == domainpart){
             console.log("Domain Part is Verified...")
         }else{
@@ -95,7 +98,7 @@ app.post("/test", (req, res) => {
       console.log("regex stuff for ENGLISH");
       //"^[a-zA-Z0-9.!#$%&’*+=?^`{|}~-]+@([a-zA-Z0-9-]+[.]){1,2}[a-zA-Z]{2,10}$"
       const EmailRegEx = new RegExp(
-        "^(?![^@\n]*([-.])\1)(?![^@\n]*([-.])(?:[^@\n]*\2){2})\w(?:[\w.-]*\w)?@(?:[a-zA-Z]+\.)+[a-zA-Z]+$",
+        "^((?!-)[A-Za-z0-9-]{1, 63}(?<!-)\\.)+[A-Za-z]{2, 6}$",
       );
       console.log("Email : ", EmailRegEx.test(email));
     }
