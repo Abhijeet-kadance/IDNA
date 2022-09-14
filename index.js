@@ -194,8 +194,8 @@ app.get("/json", (req, res) => {
     //     });
         
     //   });
-    // console.log(jsonData);
-    //var obj = JSON.parse(firstLine.replace('#URL => ',''));
+    console.log(jsonData);
+   // var obj = JSON.parse(firstLine.replace('#URL => ',''));
   });
 });
 app.listen(3000, () => {
