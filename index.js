@@ -141,6 +141,15 @@ app.get('/checkdns', (req,res) => {
         }
     });
 });
+
+app.get('/testregex',(req,res)=>{
+    console.log(req.body)
+    let domain = req.body.domain;
+    //let punyRegex = new RegExp(`^(?!\.)((?!.*\.{2})[a-zA-Z0-9\u00E0-\u00FC.!#$%&'*+-/=?^_{|}~\-\d]+)@(?!\.)([a-zA-Z0-9\u00E0-\u00FC\-\.\d]+)((\.([a-zA-Z]){2,63})+)$`);
+    let localRegex = new RegExp('^(?!.*[.]{2})(?=.*[a-z0-9]$)[a-z0-9][a-z0-9.]{0,63}$');
+    console.log(localRegex.test(domain))
+})
+
 app.listen(3000, () => {
   console.log("Server running on port 3000");
 });
