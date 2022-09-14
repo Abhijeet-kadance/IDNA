@@ -157,11 +157,45 @@ app.get("/testregex", (req, res) => {
   console.log(localRegex.test(domaincode));
 });
 
+app.get("/append", (req, res) => {
+  const array = ["one", "two", "three"];
+  array.forEach(function (item, index) {
+    console.log(item);
+    fs.appendFile("message.txt", item +" ", function (err) {
+      if (err) throw err;
+    //   console.log("Saved!");
+    });
+    
+  });
+});
+
 app.get("/json", (req, res) => {
   fs.readFile("./test.txt", (err, data) => {
     if (err) throw err;
-
     console.log(data.toString());
+    let text = data.toString();
+    var firstLine = text.split("\n").shift(); // first line
+    let test = firstLine.replace("#URL => ", "");
+    console.log("First Line", test);
+    var linesExceptFirst = text.split("\n").slice(1).join("\n");
+    console.log(linesExceptFirst);
+    let dataall = linesExceptFirst.replace(/(\r\n|\n|\r)/gm, "");
+    console.log(dataall);
+    const jsonData = {
+      url: test,
+      data: dataall,
+    };
+
+    // array.forEach(function (item, index) {
+    //     console.log(item);
+    //     fs.appendFile("message.txt", jsonData +" ", function (err) {
+    //       if (err) throw err;
+    //     //   console.log("Saved!");
+    //     });
+        
+    //   });
+    // console.log(jsonData);
+    //var obj = JSON.parse(firstLine.replace('#URL => ',''));
   });
 });
 app.listen(3000, () => {
