@@ -74,7 +74,7 @@ app.post("/test", (req, res) => {
         let punyUniCodeValue = uts46.toUnicode(punyAsciiValue);
 
         const domainRegEx =
-          /\b((xn--)?(?!.*[.]{2})[a-z0-9]+(-[a-z0-9]+)*\.)+\b((xn--)?[a-z0-9]*){2,63}\b/;
+          /\b((xn--)?(?!.*[.]{2})[a-z0-9]+(-[a-z0-9]+)*\.)+\b((xn--)?(?!.*[.]{2})[a-z0-9]*){2,63}\b/;
         console.log(
           "Testing Domain RegExpression: " + domainRegEx.test(punyAsciiValue)
         );
@@ -86,10 +86,9 @@ app.post("/test", (req, res) => {
         // }
 
         // validate local part
-        const localRegex = new RegExp(
-          "^(?!.*[.]{2})(?=.*[a-z0-9]$)[a-z0-9][a-z0-9.]{0,63}$"
-        );
-        console.log(localRegex.test(localpart));
+        const localRegex =/\b((xn--)?(?!.*[.]{2})[a-z0-9]+(-[a-z0-9]+)*\.)+\b((xn--)?(?!.*[.]{2})[a-z0-9]*){2,63}\b/
+        let LocalAsciiValue = uts46.toAscii(domainpart, { useStd3ASCII: true });
+        console.log(localRegex.test(LocalAsciiValue));
       } catch (error) {
         console.log("Error", error);
         console.log("domain invalidated ");
