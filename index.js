@@ -4,7 +4,7 @@ const bodyParser = require("body-parser");
 var lookup = require("dns-lookup");
 var cors = require("cors");
 var uts46 = require("idna-uts46");
-const fs = require("fs");
+
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -18,7 +18,7 @@ function convertTextToArray() {
   var fs = require("fs");
   var text = fs.readFileSync("./docs/test.txt");
   var textByLine = text.toString().split("\r\n");
-  console.log(textByLine);
+  // console.log(textByLine);
   return textByLine;
 }
 
@@ -29,7 +29,6 @@ function tldcheck(domain) {
   if (domain.length > 0) {
     let d = domain.split(".").slice(-1)[0];
     let tld = uts46.toAscii(d);
-    console.log(tld);
     let status = tldArray.includes(tld.toUpperCase());
     return status;
   } else {
@@ -52,7 +51,7 @@ app.post("/test", (req, res) => {
   const email = req.body.email;
   console.log(email);
   const TLDList = convertTextToArray();
-  console.log(TLDList);
+
 
   if (email.split("@").length > 2) {
     console.log("Email ", email, " not valid");
@@ -67,43 +66,26 @@ app.post("/test", (req, res) => {
   if (tldCheck === true) {
     if (checkUnicodeStandard(email)) {
       // true for unicode
+
       // validate for unicode
       console.log("Do UTS stuff");
       try {
         let punyAsciiValue = uts46.toAscii(domainpart, { useStd3ASCII: true });
         let punyUniCodeValue = uts46.toUnicode(punyAsciiValue);
-        console.log("Test : " + punyAsciiValue);
-        console.log(punyUniCodeValue);
-        //RegExp for Punny Code Standard
-        //\b((xn--)?[a-z0-9]+(-[a-z0-9]+)*\.)+\b((xn--)?[a-z0-9]*){2,63}\b
 
-        //Regular Expression FOr no repeatative '.' character in email
-        //^(?!\.)(?!.*\.$)(?!.*?\.\.)[a-zA-Z0-9_.]+$
-
-        // validate domain part
-
-        // Check whether each part of the domain is not longer than 63 characters,
-        // and allow internationalized domain names using the punycode notation:
-
-        // \b((xn--)?[a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,63}\b
-        // \b((?=[a-z0-9-]{1,63}\.)(xn--)?[a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,63}\b
-
-        // const domainRegEx = new RegExp('^(?!\.)(?!.*\.$)(?!.*?\.\.)[a-zA-Z0-9_.]+$')
-        ///\b((xn--)?[a-z0-9]+(-[a-z0-9]+)*\.)+\b((xn--)?[a-z0-9]*){2,63}\b/
         const domainRegEx =
           /\b((xn--)?(?!.*[.]{2})[a-z0-9]+(-[a-z0-9]+)*\.)+\b((xn--)?[a-z0-9]*){2,63}\b/;
         console.log(
           "Testing Domain RegExpression: " + domainRegEx.test(punyAsciiValue)
         );
 
-        if (punyUniCodeValue == domainpart) {
-          console.log("Domain Part is Verified...");
-        } else {
-          console.log("Domain part is not validated");
-        }
+        // if (punyUniCodeValue == domainpart) {
+        //   console.log("Domain Part is Verified...");
+        // } else {
+        //   console.log("Domain part is not validated");
+        // }
 
         // validate local part
-
         const localRegex = new RegExp(
           "^(?!.*[.]{2})(?=.*[a-z0-9]$)[a-z0-9][a-z0-9.]{0,63}$"
         );
@@ -116,8 +98,8 @@ app.post("/test", (req, res) => {
       // false for english
       // validate email
       console.log("regex stuff for ENGLISH");
-      //"^[a-zA-Z0-9.!#$%&’*+=?^`{|}~-]+@([a-zA-Z0-9-]+[.]){1,2}[a-zA-Z]{2,10}$"
-      const EmailRegEx = /^((?!-)[A-Za-z0-9-]{1, 63}(?<!-)\\.)+[A-Za-z]{2, 6}$/;
+
+      const EmailRegEx = /^[a-zA-Z0-9.!#$%&’*+=?^`{|}~-]+@([a-zA-Z0-9-]+[.]){1,2}[a-zA-Z]{2,10}$/;
       console.log("Email : ", EmailRegEx.test(email));
     }
   } else {
@@ -146,58 +128,6 @@ app.get("/checkdns", (req, res) => {
   });
 });
 
-app.get("/testregex", (req, res) => {
-  console.log(req.body);
-  let domain = req.body.email;
-  //let punyRegex = new RegExp(`^(?!\.)((?!.*\.{2})[a-zA-Z0-9\u00E0-\u00FC.!#$%&'*+-/=?^_{|}~\-\d]+)@(?!\.)([a-zA-Z0-9\u00E0-\u00FC\-\.\d]+)((\.([a-zA-Z]){2,63})+)$`);
-  let localRegex =
-    /\b((xn--)?[a-z0-9]+(-[a-z0-9]+)*\.)+\b((xn--)?[a-z0-9]*){2,63}\b/;
-  let domaincode = uts46.toAscii(domain, { useStd3ASCII: true });
-  console.log(domaincode);
-  console.log(localRegex.test(domaincode));
-});
-
-app.get("/append", (req, res) => {
-  const array = ["one", "two", "three"];
-  array.forEach(function (item, index) {
-    console.log(item);
-    fs.appendFile("message.txt", item +" ", function (err) {
-      if (err) throw err;
-    //   console.log("Saved!");
-    });
-    
-  });
-});
-
-app.get("/json", (req, res) => {
-  fs.readFile("./test.txt", (err, data) => {
-    if (err) throw err;
-    console.log(data.toString());
-    let text = data.toString();
-    var firstLine = text.split("\n").shift(); // first line
-    let test = firstLine.replace("#URL => ", "");
-    console.log("First Line", test);
-    var linesExceptFirst = text.split("\n").slice(1).join("\n");
-    console.log(linesExceptFirst);
-    let dataall = linesExceptFirst.replace(/(\r\n|\n|\r)/gm, "");
-    console.log(dataall);
-    const jsonData = {
-      url: test,
-      data: dataall,
-    };
-
-    // array.forEach(function (item, index) {
-    //     console.log(item);
-    //     fs.appendFile("message.txt", jsonData +" ", function (err) {
-    //       if (err) throw err;
-    //     //   console.log("Saved!");
-    //     });
-        
-    //   });
-    // console.log(jsonData);
-    //var obj = JSON.parse(firstLine.replace('#URL => ',''));
-  });
-});
 app.listen(3000, () => {
   console.log("Server running on port 3000");
 });
