@@ -7,7 +7,7 @@ var uts46 = require("idna-uts46");
 var Isemail = require('isemail');
 const notifier = require('node-notifier');
 const WindowsBalloon = require('node-notifier/notifiers/balloon');
-
+var tlds = require('tld-list');
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -16,6 +16,15 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.get("/", (req, res) => {
   res.send("Test Code");
 });
+
+app.get("/tld",(req,res) => {
+  if(tlds.includes('aaaasda')){
+    console.log("Hurray!!!!")
+  }else{
+    console.log('Boooooo')
+  }
+  //console.log(tlds)
+})
 
 function convertTextToArray() {
   var fs = require("fs");
@@ -28,7 +37,8 @@ function convertTextToArray() {
 // check TLD
 function tldcheck(domain) {
   let tldArray = convertTextToArray();
-
+  console.log('Domain : ' + domain)
+  console.log("TLD ARRAY"+tldArray)
   if (domain.length > 0) {
     let d = domain.split(".").slice(-1)[0];
     let tld = uts46.toAscii(d);
@@ -113,8 +123,8 @@ app.post("/test", (req, res) => {
             } else {
               // tld check failed
               console.log("tld not valid");
-              window.alert('')
-              notifier.notify('Please Enter a Valid IDN Email address');
+              // window.alert('asasdasd')
+              notifier.notify('Please Enter a Valid Top level domain');
             }
   }else if(isEmailValid == false){
     console.log("Please Enter a valid Email Address")
