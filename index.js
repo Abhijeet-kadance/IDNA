@@ -4,27 +4,19 @@ const bodyParser = require("body-parser");
 var lookup = require("dns-lookup");
 var cors = require("cors");
 var uts46 = require("idna-uts46");
-var Isemail = require('isemail');
-const notifier = require('node-notifier');
-const WindowsBalloon = require('node-notifier/notifiers/balloon');
-var tlds = require('tld-list');
+var Isemail = require("isemail");
+const notifier = require("node-notifier");
+const WindowsBalloon = require("node-notifier/notifiers/balloon");
+var tlds = require("tld-list");
+var isAscii = require("is-ascii");
 
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.get("/", (req, res) => {
-  res.send("Test Code");
-});
-
-app.get("/tld",(req,res) => {
-  if(tlds.includes('aaaasda')){
-    console.log("Hurray!!!!")
-  }else{
-    console.log('Boooooo')
-  }
-  //console.log(tlds)
-})
+/************************************
+ Function to Convert Text to Array
+ ***********************************/
 
 function convertTextToArray() {
   var fs = require("fs");
@@ -34,11 +26,12 @@ function convertTextToArray() {
   return textByLine;
 }
 
-// check TLD
+/**********************************
+ Function for TLD Check 
+ *********************************/
 function tldcheck(domain) {
   let tldArray = convertTextToArray();
-  console.log('Domain : ' + domain)
-  console.log("TLD ARRAY"+tldArray)
+
   if (domain.length > 0) {
     let d = domain.split(".").slice(-1)[0];
     let tld = uts46.toAscii(d);
@@ -48,16 +41,20 @@ function tldcheck(domain) {
     return false;
   }
 }
+/**********************************
+ Function To Check Domain/Local part
+ **********************************/
 
-// check domain/local part
 function checkUnicodeStandard(str) {
   console.log("inside the Function");
   for (var i = 0, n = str.length; i < n; i++) {
     if (str.charCodeAt(i) > 255) {
       return true;
+    }else{
+      return false;
     }
   }
-  return false;
+ 
 }
 
 app.post("/test", (req, res) => {
@@ -66,132 +63,138 @@ app.post("/test", (req, res) => {
   // const TLDList = convertTextToArray();
 
   const isEmailValid = Isemail.validate(email);
-  console.log("Valid Email : " + isEmailValid)
-
-  if(isEmailValid === true){
-    console.log("Email is a valid email address")
+  console.log("Valid Email : " + isEmailValid);
+  
+  if (isEmailValid === true) {
+    console.log("Email is a valid email address");
 
     if (email.split("@").length > 2) {
-          console.log("Email ", email, " not valid");
-          return;
-        }
-        var localpart = email.split("@")[0];
-        var domainpart = email.split("@")[1];
-      
-        // check TLD
-        let tldCheck = tldcheck(domainpart);
-
-        if (tldCheck === true) {
-              if (checkUnicodeStandard(email)) {
-                // true for unicode
-          
-                // validate for unicode
-                console.log("Do UTS stuff");
-                try {
-                  let punyAsciiValue = uts46.toAscii(domainpart, { useStd3ASCII: true });
-                  let punyUniCodeValue = uts46.toUnicode(punyAsciiValue);
-          
-                  const domainRegEx =
-                    /\b((xn--)?(?!.*[.]{2})[a-z0-9]+(-[a-z0-9]+)*\.)+\b((xn--)?(?!.*[.]{2})[a-z0-9]*){2,63}\b/;
-                  console.log(
-                    "Testing Domain RegExpression: " + domainRegEx.test(punyAsciiValue)
-                  );
-                  notifier.notify('Email Is a Valid IDN Email Address');
-                  // if (punyUniCodeValue == domainpart) {
-                  //   console.log("Domain Part is Verified...");
-                  // } else {
-                  //   console.log("Domain part is not validated");
-                  // }
-          
-                  // validate local part
-                  const localRegex =/\b((xn--)?(?!.*[.]{2})[a-z0-9]+(-[a-z0-9]+)*\.)+\b((xn--)?(?!.*[.]{2})[a-z0-9]*){2,63}\b/
-                  let LocalAsciiValue = uts46.toAscii(domainpart, { useStd3ASCII: true });
-                  console.log("Testing Local Part RegExpression: " + localRegex.test(LocalAsciiValue));
-                } catch (error) {
-                  console.log("Error", error);
-                  console.log("domain invalidated ");
-                }
-              } else {
-                // false for english
-                // validate email
-                console.log("regex stuff for ENGLISH");
-          
-                const EmailRegEx = /^[a-zA-Z0-9.!#$%&’*+=?^`{|}~-]+@([a-zA-Z0-9-]+[.]){1,2}[a-zA-Z]{2,10}$/;
-                console.log("Email : ", EmailRegEx.test(email));
-                notifier.notify('Email Is a Valid ASCII Email Address');
-              }
-            } else {
-              // tld check failed
-              console.log("tld not valid");
-              // window.alert('asasdasd')
-              notifier.notify('Please Enter a Valid Top level domain');
-            }
-  }else if(isEmailValid == false){
-    console.log("Please Enter a valid Email Address")
-    notifier.notify('Please Enter a Valid Email address');
-  }else{
-    console.log("Endcase")
-  }
-
-  // if(isEmailValid === true){
-  //   if (email.split("@").length > 2) {
-  //     console.log("Email ", email, " not valid");
-  //     return;
-  //   }
-  //   var localpart = email.split("@")[0];
-  //   var domainpart = email.split("@")[1];
-  
-  //   // check TLD
-  //   let tldCheck = tldcheck(domainpart);
-  
-  //   if (tldCheck === true) {
-  //     if (checkUnicodeStandard(email)) {
-  //       // true for unicode
-  
-  //       // validate for unicode
-  //       console.log("Do UTS stuff");
-  //       try {
-  //         let punyAsciiValue = uts46.toAscii(domainpart, { useStd3ASCII: true });
-  //         let punyUniCodeValue = uts46.toUnicode(punyAsciiValue);
-  
-  //         const domainRegEx =
-  //           /\b((xn--)?(?!.*[.]{2})[a-z0-9]+(-[a-z0-9]+)*\.)+\b((xn--)?(?!.*[.]{2})[a-z0-9]*){2,63}\b/;
-  //         console.log(
-  //           "Testing Domain RegExpression: " + domainRegEx.test(punyAsciiValue)
-  //         );
-  
-  //         // if (punyUniCodeValue == domainpart) {
-  //         //   console.log("Domain Part is Verified...");
-  //         // } else {
-  //         //   console.log("Domain part is not validated");
-  //         // }
-  
-  //         // validate local part
-  //         const localRegex =/\b((xn--)?(?!.*[.]{2})[a-z0-9]+(-[a-z0-9]+)*\.)+\b((xn--)?(?!.*[.]{2})[a-z0-9]*){2,63}\b/
-  //         let LocalAsciiValue = uts46.toAscii(domainpart, { useStd3ASCII: true });
-  //         console.log(localRegex.test(LocalAsciiValue));
-  //       } catch (error) {
-  //         console.log("Error", error);
-  //         console.log("domain invalidated ");
-  //       }
-  //     } else {
-  //       // false for english
-  //       // validate email
-  //       console.log("regex stuff for ENGLISH");
-  
-  //       const EmailRegEx = /^[a-zA-Z0-9.!#$%&’*+=?^`{|}~-]+@([a-zA-Z0-9-]+[.]){1,2}[a-zA-Z]{2,10}$/;
-  //       console.log("Email : ", EmailRegEx.test(email));
-  //     }
-  //   } else {
-  //     // tld check failed
-  //     console.log("tld not valid");
-  //   }
+      console.log("Email ", email, " not valid");
+      return;
+    }
+    var localpart = email.split("@")[0];
+    var domainpart = email.split("@")[1];
+    // console.log(checkUnicodeStandard(localpart))
+    console.log("Local Part : " + localpart + " Domain Part : " + domainpart )
     
-  // }else if(isEmailValid === false) {
-  //     console.log("falied")
-  // }
-  
-  
+    if(checkUnicodeStandard(localpart) && checkUnicodeStandard(domainpart) === true){
+      console.log("Valid IDN Domain")
+       // check TLD
+    let tldCheck = tldcheck(domainpart);
+
+    if (tldCheck === true) {
+      if (checkUnicodeStandard(email)) {
+        // true for unicode
+
+        // validate for unicode
+        console.log("Do UTS stuff");
+        try {
+          let punyAsciiValue = uts46.toAscii(domainpart, {
+            useStd3ASCII: true,
+          });
+          let punyUniCodeValue = uts46.toUnicode(punyAsciiValue);
+
+          const domainRegEx =
+            /\b((xn--)?(?!.*[.]{2})[a-z0-9]+(-[a-z0-9]+)*\.)+\b((xn--)?(?!.*[.]{2})[a-z0-9]*){2,63}\b/;
+          console.log(
+            "Testing Domain RegExpression: " + domainRegEx.test(punyAsciiValue)
+          );
+          notifier.notify("Valid IDN Email Address");
+
+          // validate local part
+          const localRegex =
+            /\b((xn--)?(?!.*[.]{2})[a-z0-9]+(-[a-z0-9]+)*\.)+\b((xn--)?(?!.*[.]{2})[a-z0-9]*){2,63}\b/;
+          let LocalAsciiValue = uts46.toAscii(domainpart, {
+            useStd3ASCII: true,
+          });
+          console.log(
+            "Testing Local Part RegExpression: " +
+              localRegex.test(LocalAsciiValue)
+          );
+        } catch (error) {
+          console.log("Error", error);
+          console.log("domain invalidated");
+        }
+      } else {
+        // false for english
+        // validate email
+        console.log("regex stuff for ENGLISH");
+
+        const EmailRegEx =
+          /^[a-zA-Z0-9.!#$%&’*+=?^`{|}~-]+@([a-zA-Z0-9-]+[.]){1,2}[a-zA-Z]{2,10}$/;
+        console.log("Email : ", EmailRegEx.test(email));
+        notifier.notify("Valid ASCII Email Address");
+      }
+    } else {
+      // tld check failed
+      console.log("tld not valid");
+      // window.alert('asasdasd')
+      notifier.notify("Please Enter a Valid Top level domain");
+    }
+    } else if(isAscii(localpart) && isAscii(domainpart) === true){
+       // check TLD
+    let tldCheck = tldcheck(domainpart);
+
+    if (tldCheck === true) {
+      if (checkUnicodeStandard(email)) {
+        // true for unicode
+
+        // validate for unicode
+        console.log("Do UTS stuff");
+        try {
+          let punyAsciiValue = uts46.toAscii(domainpart, {
+            useStd3ASCII: true,
+          });
+          let punyUniCodeValue = uts46.toUnicode(punyAsciiValue);
+
+          const domainRegEx =
+            /\b((xn--)?(?!.*[.]{2})[a-z0-9]+(-[a-z0-9]+)*\.)+\b((xn--)?(?!.*[.]{2})[a-z0-9]*){2,63}\b/;
+          console.log(
+            "Testing Domain RegExpression: " + domainRegEx.test(punyAsciiValue)
+          );
+          notifier.notify("Valid IDN Email Address");
+
+          // validate local part
+          const localRegex =
+            /\b((xn--)?(?!.*[.]{2})[a-z0-9]+(-[a-z0-9]+)*\.)+\b((xn--)?(?!.*[.]{2})[a-z0-9]*){2,63}\b/;
+          let LocalAsciiValue = uts46.toAscii(domainpart, {
+            useStd3ASCII: true,
+          });
+          console.log(
+            "Testing Local Part RegExpression: " +
+              localRegex.test(LocalAsciiValue)
+          );
+        } catch (error) {
+          console.log("Error", error);
+          console.log("domain invalidated");
+        }
+      } else {
+        // false for english
+        // validate email
+        console.log("regex stuff for ENGLISH");
+
+        const EmailRegEx =
+          /^[a-zA-Z0-9.!#$%&’*+=?^`{|}~-]+@([a-zA-Z0-9-]+[.]){1,2}[a-zA-Z]{2,10}$/;
+        console.log("Email : ", EmailRegEx.test(email));
+        notifier.notify("Valid ASCII Email Address");
+      }
+    } else {
+      // tld check failed
+      console.log("tld not valid");
+      // window.alert('asasdasd')
+      notifier.notify("Please Enter a Valid Top level domain");
+    }
+    }else{
+      notifier.notify("Please Enter a Valid Email");
+      console.log("Invalid Domain")
+    }
+   
+  } else if (isEmailValid == false) {
+    console.log("Please Enter a valid Email Address");
+    notifier.notify("Please Enter a Valid Email address");
+  } else {
+    console.log("Endcase");
+  }
 });
 
 app.get("/checkdns", (req, res) => {
@@ -212,6 +215,19 @@ app.get("/checkdns", (req, res) => {
       console.log("DNS does not exists !!!");
     }
   });
+});
+
+app.get("/", (req, res) => {
+  res.send("Test Code");
+});
+
+app.get("/tld", (req, res) => {
+  if (tlds.includes("aaaasda")) {
+    console.log("Hurray!!!!");
+  } else {
+    console.log("Boooooo");
+  }
+  //console.log(tlds)
 });
 
 app.listen(3000, () => {
