@@ -119,11 +119,14 @@ app.post("/test", (req, res) => {
   }
   // const TLDList = convertTextToArray();
 
-  const isEmailValid = Isemail.validate(email);
-  console.log("Valid Email : " + isEmailValid);
+  
   if (email === "") {
     return false;
+  }else{
+    const isEmailValid = Isemail.validate(email);
+    console.log("Valid Email : " + isEmailValid);
   }
+
   if (isEmailValid === true) {
     console.log("Email is a valid email address");
 
