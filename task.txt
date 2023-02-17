@@ -1,12 +1,5 @@
-
-
-Steps :
-1- check TLD(top level domain)
-2- split local and domain part 
-3- check local and domain is valid
-    // Local part must 64 characters Length
-    // Domin part 254 characters Length (Excluding @)
-    a- Check domain/local is in ASCII or unicode
-    b- check domain/local if IDNA compliant separatly
-
-4- check if both domain and local parts are valid
+Check whethear a domain name is English or any other language
+Check whether the domain is Unicode or ASCII Value 
+Print Domain name
+Print IDN punnycode value 
+ 
