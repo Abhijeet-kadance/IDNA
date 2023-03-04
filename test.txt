@@ -133,3 +133,23 @@ app.post("/test", (req, res) => {
     console.log("Endcase")
   }
 });
+
+
+
+
+
+
+  // let idnaStatus = checkUnicodeStandard(domain);
+  // console.log("Idna Domain status : " + idnaStatus);
+
+  // const domainRegEx =
+  //   /\b((xn--)?(?!.*[.]{2})[a-z0-9]+(-[a-z0-9]+)*\.)+\b((xn--)?(?!.*[.]{2})[a-z0-9]*){2,63}\b/;
+  // console.log(
+  //   "Testing Domain RegExpression: " + domainRegEx.test(punyAsciiValue)
+  // );
+
+  //----Outputing Results----//
+
+  // console.log("Valid Domain Check : " + isValidDomain(domain));
+  // console.log("Testing ASCII : "+ isASCII(domain))
+ 
