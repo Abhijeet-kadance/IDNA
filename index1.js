@@ -328,7 +328,7 @@ app.post("/domain", (req, res) => {
 
   const localRegex =
   /\b((xn--)?(?!.*[.]{2})[a-z0-9]+(-[a-z0-9]+)*\.)+\b((xn--)?(?!.*[.]{2})[a-z0-9]*){2,63}\b/;
-
+ 
   console.log("Domain Unicode Check : "+isUnicode(cleaned_domain_name))
 
   let punyAsciiValue = uts46.toAscii(cleaned_domain_name, {
@@ -336,7 +336,7 @@ app.post("/domain", (req, res) => {
   });
 
   console.log("Punny Code value of domain : "+ punyAsciiValue)
-
+   console.log("Check regex for punny code !!!" + localRegex.test(punyAsciiValue ))
 //  const domainRegex = '^[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9]\.[a-zA-Z]{2,}$'
  console.log("Domain valid regex : " + isValidDomainName(cleaned_domain_name))
   if(isValidDomainName(punyAsciiValue) === true){
@@ -380,6 +380,11 @@ app.post("/checkIdnEmail", (req, res) => {
     return /^[\x00-\x7F]*$/.test(str);
   }
 
+  function isUnicode(str){
+    return /[^\u0000-\u007F]+$/.test(str);
+  }
+
+
   console.log("Recived Email" + email);
   console.log(Isemail.validate(email));
   const isEmailValid = Isemail.validate(email);
@@ -391,7 +396,13 @@ app.post("/checkIdnEmail", (req, res) => {
     console.log("ASCCI : "+ isASCII(domainpart))
     console.log("Unicode: " + checkUnicodeStandard(localpart))
     console.log("Local Part : " + localpart + " Domain Part : " + domainpart);
-
+    
+    console.log("Is Unicode Check Local : " + isUnicode(localpart))
+    
+  console.log("Is Unicode Check Domain : " + isUnicode(domainpart))
+ 
+  console.log("Is Unicode Check Domain : " + isUnicode('जिस्टmail.भारत'));
+  
     if (isASCII(localpart) && isASCII(domainpart) === true) {
       console.log("Valid ASCII Email Address");
 
@@ -410,7 +421,7 @@ app.post("/checkIdnEmail", (req, res) => {
         notifier.notify("Please Enter a Valid Top level domain");
       }
     } else if (
-       isASCII(domainpart) === false  && isASCII(localpart) === false
+       isUnicode(domainpart) === true  && isUnicode(localpart) === true
     ) {
       console.log("Valid IDN Email");
 
@@ -441,6 +452,7 @@ app.post("/checkIdnEmail", (req, res) => {
         }
       }else{
         console.log("Not a valid TLD domain")
+        notifier.notify("Entered email tld is not valid");
 	res.send({"message": "Not a valid TLD domain", "status": "error"});
       }
     }else{
@@ -456,6 +468,6 @@ app.post("/checkIdnEmail", (req, res) => {
 });
 
 app.listen(3000, () => {
-  console.log("Server running on port 3003");
+  console.log("Server running on port 3000 : index1.js");
 });
 
