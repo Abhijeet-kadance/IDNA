@@ -320,7 +320,7 @@ app.post("/domain", (req, res) => {
     return /^[\x00-\x7F]*$/.test(str);
   }
   function isUnicode(str){
-    return /[^\u0000-\u007F]+$/.test(str);
+    return /[^\u0900-\u097F]+$/.test(str);
   }
   function isValidDomainName(str){
     return /^[a-zA-Z0-9 -][a-zA-Z0-9- -]{1,61}[a-zA-Z0-9 -]\.[a-zA-Z -]{2,}$/.test(str);
@@ -381,9 +381,12 @@ app.post("/checkIdnEmail", (req, res) => {
   }
 
   function isUnicode(str){
-    return /[^\u0000-\u007F]+$/.test(str);
+    return /[^\u0900-\u097F]+$/.test(str);
   }
 
+  function isDevnagri(str){
+    return /[^\u901\u902\u903\u93c\u93e\u93f\u940\u941\u942\u943\u944\u945\u946\u947\u948\u949\u94a\u94b\u94c\u94d\u951\u952\u953\u954\u962\u963]+$/.test(str);
+  }
 
   console.log("Recived Email" + email);
   console.log(Isemail.validate(email));
