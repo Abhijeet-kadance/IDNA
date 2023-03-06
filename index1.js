@@ -278,7 +278,7 @@ app.post("/test", (req, res) => {
     } else {
       notifier.notify("Please Enter a Valid Email");
       console.log("Invalid Domain");
-      res.send({"message": "Please Enter a Valid Email Address", "status": "error"});
+      res.send({"message": "Please Enter a Valid Top Level Domain", "status": "error"});
     }
   } else if (isEmailValid == false) {
     console.log("Please Enter a valid Email Address");
