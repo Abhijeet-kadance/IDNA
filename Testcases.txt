@@ -1,0 +1,16 @@
+Testcases for Emails
+-------------------------------------
+
+
+संजय@जिस्टमेल.भारत
+Sanjayसंजय@जिस्टमेल.भारत
+संजय@जिस्टmail.भारत
+
+
+abhijeet.kadance.96@
+abhijeet@gmail 
+abhijeet
+aaa 
+0asss@gmail.com
+-asj@gmail.com
+abhijeet@gmail.comasas --- invalid tld

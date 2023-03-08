@@ -20,14 +20,8 @@ function detect(text){
 
       const languages = {
         en: XRegExp('\\p{Latin}', 'gi'),
-        zh: XRegExp('\\p{Han}', 'gi'),
         hi: XRegExp('\\p{Devanagari}', 'gi'),
-        ar: XRegExp('\\p{Arabic}', 'gi'),
         bn: XRegExp('\\p{Bengali}', 'gi'),
-        he: XRegExp('\\p{Hebrew}', 'gi'),
-        ru: XRegExp('\\p{Cyrillic}', 'gi'),
-        jp: XRegExp('[\\p{Hiragana}\\p{Katakana}]', 'gi'),
-        pa: XRegExp('\\p{Gurmukhi}', 'gi')
       }
     //   const languages = {
     //     "/^[\u0900-\u097F]*$/": "english",

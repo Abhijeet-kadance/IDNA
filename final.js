@@ -172,6 +172,7 @@ app.use(function (req, res, next) {
         }
     }
     else{
+    if(tldcheck(cleaned_domain_name) === true){
       if(isUnicode(subdomain) == true){
         console.log("The Domain is a Internationalized Domain")
         console.log("The Unicode Version of the Domain is : " + cleaned_domain_name)
@@ -181,6 +182,10 @@ app.use(function (req, res, next) {
         console.log("Entered Domain name is In-valid")
         res.send({"message": "Please Enter a Valid Email Address", "status": "error"})
       }
+    }else{
+        console.log("Not a valid TLD");
+        res.send({"message":"Not a valid TLD", "status": "error"})
+    }
     }
     
   });
