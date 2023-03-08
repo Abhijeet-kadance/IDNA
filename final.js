@@ -160,12 +160,15 @@ app.use(function (req, res, next) {
                 res.send({"message":"Not a valid TLD", "status": "error"})
             }     
         }else if(isUnicode(subdomain) == true){
-        
+            if(tldcheck(subdomain) === true){
             console.log("The Domain is a Internationalized Domain")
             console.log("The Unicode Version of the Domain is : " + cleaned_domain_name)
             console.log("IDN Domain Punnycode Format : "+punyAsciiValue);
             res.send({"message": "Valid IDN DOMAIN Name", "status": "success"});
-
+            }else{
+                console.log("Not a valid TLD");
+                res.send({"message":"Not a valid TLD", "status": "error"})
+            }
         }else{
             console.log("Entered Domain name is In-valid")
             res.send({"message": "Please Enter a Valid Email Address", "status": "error"})
