@@ -136,13 +136,16 @@ app.use(function (req, res, next) {
     let punyAsciiValue = uts46.toAscii(cleaned_domain_name, {
       useStd3ASCII: true,
     });
+
+    let punnyToUnicode = uts46.toUnicode(cleaned_domain_name);
+    console.log("Unicode converted domain name : " + punnyToUnicode)
     
 
      console.log("Punny Code value of domain : "+ punyAsciiValue)
      console.log("Check regex for punny code !!!" + localRegex.test(punyAsciiValue ))
   // const domainRegex = '^[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9]\.[a-zA-Z]{2,}$'
      console.log("Domain valid regex : " + isValidDomainName(cleaned_domain_name))
-     let subdomain = cleaned_domain_name.split('.',1)[0]
+     let subdomain = punnyToUnicode.split('.',1)[0]
      console.log(subdomain)
      console.log("Check sub-domain unicode range : " + isUnicode(subdomain))
 
