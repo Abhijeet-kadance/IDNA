@@ -245,6 +245,7 @@ app.post("/checkIdnEmail", (req, res) => {
   
         } else {
           console.log("Please Enter a valid TLD email address");
+          res.send({"message": "Please Enter a valid TLD email address", "status": "error"});
           notifier.notify("Please Enter a Valid Top level domain");
         }
       } else if (
