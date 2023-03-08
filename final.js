@@ -7,7 +7,7 @@ var cors = require("cors");
 var uts46 = require("idna-uts46");
 var Isemail = require("isemail");
 const notifier = require("node-notifier");
-var tlds = require("tld-list");
+//var tlds = require("tld-list");
 var isAscii = require("is-ascii");
 
 
@@ -53,7 +53,7 @@ app.use(function (req, res, next) {
       console.log("domain part split : " + d);
       let tld = uts46.toAscii(d);
       console.log(tld.toUpperCase());
-      console.log("New Check : " + tlds.includes(tld))
+  //    console.log("New Check : " + tlds.includes(tld))
       let status = tldArray.includes(tld.toUpperCase());
       console.log(status);
       return status;
