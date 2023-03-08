@@ -37,7 +37,8 @@ app.use(function (req, res, next) {
 function convertTextToArray() {
   var fs = require("fs");
   var text = fs.readFileSync("./docs/test.txt");
-  var textByLine = text.toString().split("\r\n");
+  // var textByLine = text.toString().split("\r\n");
+  var textByLine = text.toString().split(/\n|\r/g)
   // console.log(textByLine);
   return textByLine;
 }
