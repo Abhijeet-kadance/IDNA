@@ -172,7 +172,7 @@ app.use(function (req, res, next) {
         }
     }
     else{
-    if(tldcheck(cleaned_domain_name) === true){
+    if(tldcheck(subdomain) === true){
       if(isUnicode(subdomain) == true){
         console.log("The Domain is a Internationalized Domain")
         console.log("The Unicode Version of the Domain is : " + cleaned_domain_name)
