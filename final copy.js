@@ -129,7 +129,7 @@ app.use(function (req, res, next) {
       if(isValidDomainName(punyAsciiValue) === true){
         if(isASCII(cleaned_domain_name)){
             if(tldcheck(cleaned_domain_name) === true){
-                res.send({"message": "Valid ASCII Domain Name", "status": "success"});
+                res.send({"message": "Domain : " + cleaned_domain_name + " is a Valid ASCII Domain Name", "status": "success"});
             }else{
                 res.send({"message":"Not a valid TLD", "status": "error"})
             }     
