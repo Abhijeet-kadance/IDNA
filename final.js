@@ -154,17 +154,17 @@ app.use(function (req, res, next) {
             if(tldcheck(cleaned_domain_name) === true){
                 console.log("The Domain name is a ASCII based domain name")
                 console.log("The Unicode Version of the Domain is : " + cleaned_domain_name)
-                res.send({"message": "Valid ASCII Domain Name", "status": "success"});
+                res.send({"message": "Valid ASCII Domain Name : " + subdomain , "status": "success"});
             }else{
                 console.log("Not a valid TLD");
                 res.send({"message":"Not a valid TLD", "status": "error"})
             }     
         }else if(isUnicode(subdomain) == true){
-            if(tldcheck(subdomain) === true){
+            if(tldcheck(cleaned_domain_name) === true){
             console.log("The Domain is a Internationalized Domain")
             console.log("The Unicode Version of the Domain is : " + cleaned_domain_name)
             console.log("IDN Domain Punnycode Format : "+punyAsciiValue);
-            res.send({"message": "Valid IDN DOMAIN Name", "status": "success"});
+            res.send({"message": "Valid IDN DOMAIN Name : " + subdomain,"tld":"With a Top level domain : ", "status": "success"});
             }else{
                 console.log("Not a valid TLD");
                 res.send({"message":"Not a valid TLD", "status": "error"})
@@ -175,12 +175,12 @@ app.use(function (req, res, next) {
         }
     }
     else{
-    if(tldcheck(subdomain) === true){
+    if(tldcheck(cleaned_domain_name) === true){
       if(isUnicode(subdomain) == true){
         console.log("The Domain is a Internationalized Domain")
         console.log("The Unicode Version of the Domain is : " + cleaned_domain_name)
         console.log("IDN Domain Punnycode Format : "+punyAsciiValue);
-        res.send({"message": "Valid IDN DOMAIN Name", "status": "success"});
+        res.send({"message": "Valid IDN DOMAIN Name : " + subdomain, "status": "success"});
       }else{
         console.log("Entered Domain name is In-valid")
         res.send({"message": "Please Enter a Valid Email Address", "status": "error"})
